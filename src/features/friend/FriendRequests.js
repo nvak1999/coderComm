@@ -9,14 +9,17 @@ import {
   Container,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getFriendRequests } from "./friendSlice";
+import { getFriendRequests, getFriendRequestsIncoming } from "./friendSlice";
 import UserCard from "./UserCard";
 import SearchInput from "../../components/SearchInput";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
 
 function FriendRequests() {
   const [filterName, setFilterName] = useState("");
   const [page, setPage] = React.useState(1);
-
+  const [value, setValue] = React.useState("send");
   const { currentPageUsers, usersById, totalUsers, totalPages } = useSelector(
     (state) => state.friend
   );
@@ -28,14 +31,32 @@ function FriendRequests() {
   };
 
   useEffect(() => {
-    dispatch(getFriendRequests({ filterName, page }));
-  }, [filterName, page, dispatch]);
+    if (value === "send") dispatch(getFriendRequests({ filterName, page }));
+    if (value === "recieve")
+      dispatch(getFriendRequestsIncoming({ filterName, page }));
+  }, [filterName, page, dispatch, value]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Friend Requests
       </Typography>
+
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Send" value="send" />
+              <Tab label="Recieve" value="recieve" />
+            </TabList>
+          </Box>
+        </TabContext>
+      </Box>
+
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>
           <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
