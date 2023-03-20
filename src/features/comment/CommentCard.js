@@ -3,10 +3,9 @@ import { Avatar, Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { fDate } from "../../utils/formatTime";
 import CommentReaction from "./CommentReaction";
 import useAuth from "../../hooks/useAuth";
-import { deleteComment } from "./commentSlice";
+import { deleteComment, getComments } from "./commentSlice";
 import { useDispatch } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getPosts } from "../post/postSlice";
 import Modal from "@mui/material/Modal";
 
 const style = {
@@ -68,10 +67,13 @@ function CommentCard({ comment }) {
     </Modal>
   );
 
-  const deleteCmt = () => {
-    const userId = user._id;
-    dispatch(deleteComment(comment._id));
-    dispatch(getPosts({ userId }));
+  console.log(comment);
+  const deleteCmt = async () => {
+    const postId = comment.post;
+    const commentId = comment._id;
+
+    await dispatch(deleteComment({ cmtID: commentId }));
+    dispatch(getComments({ postId }));
   };
   return (
     <Stack direction="row" spacing={2}>

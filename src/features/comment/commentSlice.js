@@ -122,14 +122,16 @@ export const sendCommentReaction =
       toast.error(error.message);
     }
   };
-export const deleteComment = (cmtID) => async (dispatch) => {
-  dispatch(slice.actions.startLoading());
-  try {
-    await apiService.delete(`/comments/${cmtID}`);
-    toast.success("Comment removed");
-    dispatch(slice.actions.deleteCommentSuccess());
-  } catch (error) {
-    dispatch(slice.actions.hasError(error.message));
-    toast.error(error.message);
-  }
-};
+export const deleteComment =
+  ({ cmtID }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await apiService.delete(`/comments/${cmtID}`);
+      toast.success("Comment removed");
+      dispatch(slice.actions.deleteCommentSuccess());
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
